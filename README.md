@@ -6,9 +6,11 @@ Basic self hosted task manager
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-![Image description](./assets/readme_image.jpg)
+
 
 Task manager built with Expo, only tested in Android.
+
+<img src="./assets/readme_image.jpg" alt="Image description" width="130" height="300">
 
 ### Built With
 
