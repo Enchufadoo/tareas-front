@@ -1,12 +1,8 @@
 # TAREAS
-Basic self hosted task manager
-
-
+Basic self-hosted task manager
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
-
-
 
 Task manager built with Expo, only tested in Android.
 
