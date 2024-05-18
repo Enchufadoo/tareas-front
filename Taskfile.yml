@@ -1,0 +1,12 @@
+version: '3'
+tasks:
+  test:
+    desc: Test the entire project
+    cmds:
+      - echo "Running the tests"
+      - node_modules/.bin/jest
+  test-coverage:
+    desc: Test the entire project and make coverage report
+    cmds:
+      - echo "Running the tests"
+      - node_modules/.bin/jest --collect-coverage

@@ -1,0 +1,244 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TaskFilter Snapshot test 1`] = `
+<View
+  style={
+    [
+      [
+        {},
+        undefined,
+        {},
+      ],
+    ]
+  }
+>
+  <View
+    style={
+      [
+        [
+          {},
+          undefined,
+          {},
+        ],
+      ]
+    }
+  >
+    <View
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "opacity": 1,
+        }
+      }
+    >
+      <View
+        style={
+          [
+            [
+              {},
+              undefined,
+              {},
+            ],
+          ]
+        }
+      >
+        <Text
+          style={
+            [
+              [
+                {
+                  "color": "#000",
+                },
+                undefined,
+                {
+                  "color": "#b336be",
+                },
+              ],
+            ]
+          }
+        >
+          Open
+        </Text>
+      </View>
+    </View>
+  </View>
+  <View
+    style={
+      [
+        [
+          {},
+          undefined,
+          {},
+        ],
+      ]
+    }
+  >
+    <View
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "opacity": 1,
+        }
+      }
+    >
+      <View
+        style={
+          [
+            [
+              {},
+              undefined,
+              {},
+            ],
+          ]
+        }
+      >
+        <Text
+          style={
+            [
+              [
+                {
+                  "color": "#000",
+                },
+                undefined,
+                {
+                  "color": "#000",
+                },
+              ],
+            ]
+          }
+        >
+          Finished
+        </Text>
+      </View>
+    </View>
+  </View>
+  <View
+    style={
+      [
+        [
+          {},
+          undefined,
+          {},
+        ],
+      ]
+    }
+  >
+    <View
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "opacity": 1,
+        }
+      }
+    >
+      <View
+        style={
+          [
+            [
+              {},
+              undefined,
+              {},
+            ],
+          ]
+        }
+      >
+        <Text
+          style={
+            [
+              [
+                {
+                  "color": "#000",
+                },
+                undefined,
+                {
+                  "color": "#000",
+                },
+              ],
+            ]
+          }
+        >
+          All
+        </Text>
+      </View>
+    </View>
+  </View>
+</View>
+`;
