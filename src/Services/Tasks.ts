@@ -165,6 +165,28 @@ export const tasksApi = api.injectEndpoints({
           method: 'GET'
         }
       }
+    }),
+    getWeeksTasks: build.query<
+      {
+        data: {
+          progress: {
+            [key: number]: { number: boolean }[]
+          }
+          tasks: {
+            id: number
+            title: string
+          }[]
+        }
+      },
+      void
+    >({
+      query: () => {
+        return {
+          url: `/task/week`,
+          method: 'GET'
+        }
+      },
+      providesTags: []
     })
   })
 })
@@ -176,5 +198,6 @@ export const {
   useSetCreateTaskMutation,
   useSetAddTaskProgressMutation,
   useSetRemoveTaskProgressMutation,
-  useSetFinishTaskMutation
+  useSetFinishTaskMutation,
+  useLazyGetWeeksTasksQuery
 } = tasksApi

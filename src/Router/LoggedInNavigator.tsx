@@ -4,7 +4,8 @@ import { createDrawerNavigator } from '@react-navigation/drawer'
 import { useSx } from 'dripsy'
 import CustomDrawerContent from '@/Components/Navigation/CustomDrawer'
 import SettingsStackNavigator from '@/Router/SettingsStackNavigator'
-import LoggedInStackNavigator from '@/Router/LoggedInStackNavigator'
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs'
+import LoggedInTabNavigator from '@/Router/LoggedInTabNavigator'
 
 export type LoggedInDrawerParamList = {
   'Logged In Stack Navigator': undefined
@@ -13,6 +14,8 @@ export type LoggedInDrawerParamList = {
 
 const LoggedInNavigator: React.FC<{}> = () => {
   const sx = useSx()
+
+  const Tab = createMaterialTopTabNavigator()
 
   const LoggedInDrawerNavigator =
     createDrawerNavigator<LoggedInDrawerParamList>()
@@ -38,7 +41,7 @@ const LoggedInNavigator: React.FC<{}> = () => {
         options={{
           title: 'Home'
         }}
-        component={LoggedInStackNavigator}
+        component={LoggedInTabNavigator}
       />
 
       <LoggedInDrawerNavigator.Screen

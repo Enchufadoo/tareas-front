@@ -11,6 +11,7 @@ export const useLoadingData = (results: UseQueryHookResult<any, any>[]) => {
 
   useEffect(() => {
     const anyLoading = results.some((result) => result.isLoading)
-    dispatch(setLoadingData(anyLoading))
+    const anyFetching = results.some((result) => result.isFetching)
+    dispatch(setLoadingData(anyLoading || anyFetching))
   }, [results])
 }
