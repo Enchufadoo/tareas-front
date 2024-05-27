@@ -1,17 +1,16 @@
 import React, { useState } from 'react'
 import { ActivityIndicator, Animated, Platform, StyleSheet } from 'react-native'
 import {
+  SimpleLineIcons,
   Text,
   TextInput as ElementInput,
   View
 } from '@/Components/Nativewind/React'
 import { NativeSyntheticEvent } from 'react-native/Libraries/Types/CoreEventTypes'
 import { TextInputFocusEventData } from 'react-native/Libraries/Components/TextInput/TextInput'
-import { styled, StyledComponent } from 'nativewind'
-import { SimpleLineIcons as SSimpleLineIcons } from '@expo/vector-icons'
-import { useSx } from 'dripsy'
+import { StyledComponent } from 'nativewind'
 
-const SimpleLineIcons = styled(SSimpleLineIcons)
+import { useSx } from 'dripsy'
 
 const ORIGINAL_VALUE = 0
 const BASE_VALUE = 1

@@ -71,7 +71,7 @@ export const userApi = api.injectEndpoints({
         return {
           url: `/user/registration/email`,
           method: 'POST',
-          params: params
+          data: params
         }
       },
       invalidatesTags: []

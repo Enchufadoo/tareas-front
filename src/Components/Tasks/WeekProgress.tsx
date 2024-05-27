@@ -1,40 +1,52 @@
 import React from 'react'
 
-import { Text, View } from '@/Components/Nativewind/React'
+import { Entypo, Text, View } from '@/Components/Nativewind/React'
 import { StyleProp } from 'react-native/Libraries/StyleSheet/StyleSheet'
 import { ViewStyle } from 'react-native/Libraries/StyleSheet/StyleSheetTypes'
+import { useSx } from 'dripsy'
 
-const WeekProgress = (prop: {
-  progress: { number: boolean }[]
+const BORDER_WIDTH = 0.3
+
+type Props = {
+  progress: boolean[]
   isLastElement: boolean
-}) => {
+}
+
+const WeekProgress = (props: Props) => {
+  const sx = useSx()
+
   let rowStyle: StyleProp<ViewStyle> = {
     flexDirection: 'row',
-    borderTopWidth: 0.3
+    borderTopWidth: BORDER_WIDTH
   }
 
-  if (prop.isLastElement) {
-    rowStyle.borderBottomWidth = 0.3
+  if (props.isLastElement) {
+    rowStyle.borderBottomWidth = BORDER_WIDTH
   }
 
   return (
     <View style={rowStyle}>
-      {prop.progress.map((day, index) => {
+      {props.progress.map((day, index) => {
         let style: StyleProp<ViewStyle> = {
-          borderRightWidth: 0.3,
+          borderRightWidth: BORDER_WIDTH,
           borderColor: 'black'
         }
 
         if (index === 0) {
-          style.borderLeftWidth = 0.3
+          style.borderLeftWidth = BORDER_WIDTH
         }
         return (
           <View
+            key={index}
             className={'justify-center items-center p-2 flex-1'}
             style={style}
           >
             {day ? (
-              <Text sx={{ color: '$success' }}>X</Text>
+              <Entypo
+                name={'cross'}
+                size={24}
+                color={sx({ color: '$success' })['color']}
+              />
             ) : (
               <Text>{''}</Text>
             )}

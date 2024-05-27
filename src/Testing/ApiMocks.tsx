@@ -4,6 +4,10 @@
  */
 
 import { http, HttpResponse } from 'msw'
+import TaskWeek from '@/Testing/Responses/TaskWeek'
+import UserEmailAvailable from '@/Testing/Responses/UserEmailAvailable'
+import UserUsernameAvailable from '@/Testing/Responses/UserUsernameAvailable'
+import UserRegistrationEmail from '@/Testing/Responses/UserRegistrationEmail'
 
 const { setupServer } = require('msw/node')
 
@@ -12,13 +16,21 @@ const BASE_URL = process.env.PUBLIC_API_URL + '/api'
 export const createHandler = (url: string, code: string) => {
   const data = RESPONSES[url][code]
 
-  return http[data.method](getUrl(url), () => {
-    return HttpResponse.json(data.response)
-  })
+  return {
+    handler: http[data.method](getUrl(url), () => {
+      return HttpResponse.json(data.response)
+    }),
+    response: data.response
+  }
 }
 
 export const getResponseData = (url: string, code: string) => {
   return RESPONSES[url][code].response
+}
+
+export const createHandlerResponse = (server, url: string, code: string) => {
+  server.use(createHandler(url, code))
+  return getResponseData(url, code)
 }
 
 export const initMSW = () => {
@@ -35,12 +47,25 @@ const getUrl = (url: string) => {
   return `${BASE_URL}` + url
 }
 
-enum REQUEST_METHODS {
+export enum REQUEST_METHODS {
   'get' = 'get',
   'post' = 'post'
 }
 
-const RESPONSES = {
+type Endpoints = {
+  [key: string]: {
+    [key: string]: {
+      method: string
+      response: {}
+    }
+  }
+}
+
+const RESPONSES: Endpoints = {
+  '/task/week': TaskWeek,
+  '/user/email/available': UserEmailAvailable,
+  '/user/username/available': UserUsernameAvailable,
+  '/user/registration/email': UserRegistrationEmail,
   '/task': {
     '1_UNFINISHED': {
       method: REQUEST_METHODS.get,

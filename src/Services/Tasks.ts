@@ -170,7 +170,7 @@ export const tasksApi = api.injectEndpoints({
       {
         data: {
           progress: {
-            [key: number]: { number: boolean }[]
+            [key: number]: boolean[]
           }
           tasks: {
             id: number

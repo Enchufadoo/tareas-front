@@ -15,6 +15,7 @@ import { injectStore } from '@/Services/Axios/AxiosConfig'
 import ThemeProvider from '@/Themes/ThemeProvider'
 import { NavigationContainer } from '@react-navigation/native'
 import { StoreProvider } from '@/Context/StoreProvider'
+import ApplicationErrorBoundary from '@/Components/Errors/ApplicationErrorBoundary'
 
 // This type interface extends the default options for render from RTL, as well
 // as allows the user to specify other things such as initialState, store.
@@ -28,7 +29,7 @@ export function renderWithProviders(
   {
     preloadedState = {},
     // Automatically create a store instance if no store was passed in
-    store = setupStore(preloadedState),
+    store = setupStore(preloadedState, true),
     ...renderOptions
   }: ExtendedRenderOptions = {}
 ) {
@@ -36,9 +37,11 @@ export function renderWithProviders(
 
   function Wrapper({ children }: PropsWithChildren<{}>): JSX.Element {
     return (
-      <Provider store={store}>
-        <ThemeProvider>{children}</ThemeProvider>
-      </Provider>
+      <ApplicationErrorBoundary>
+        <Provider store={store}>
+          <ThemeProvider>{children}</ThemeProvider>
+        </Provider>
+      </ApplicationErrorBoundary>
     )
   }
   return { store, ...render(ui, { wrapper: Wrapper, ...renderOptions }) }
