@@ -26,18 +26,21 @@ import { AsyncStorageMiddleware } from '@/Store/Middleware/AsyncStorageMiddlewar
  * @todo think some more
  *
  */
-export function setupStore(preloadedState?: Partial<RootState>) {
+export function setupStore(
+  preloadedState?: Partial<RootState>,
+  testing?: boolean
+) {
   return configureStore({
     reducer: {
       application: applicationsReducer,
       [api.reducerPath]: api.reducer
     },
     middleware: (getDefaultMiddleware) => {
-      let appMiddleware = [
-        api.middleware,
-        RtkLoggerMiddleware,
-        AsyncStorageMiddleware
-      ]
+      let appMiddleware = [api.middleware, RtkLoggerMiddleware]
+
+      if (!testing) {
+        appMiddleware.push(AsyncStorageMiddleware)
+      }
 
       /*if (Platform.OS === 'web' && false) {
         appMiddleware.push(

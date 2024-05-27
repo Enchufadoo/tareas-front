@@ -4,7 +4,7 @@ import { Text, View } from '@/Components/Nativewind/React'
 import { useLazyGetWeeksTasksQuery } from '@/Services/Tasks'
 import { useLoadingData } from '@/Lib/UseLoadingData'
 import { useFocusEffect } from '@react-navigation/native'
-import WeekProgress from '@/Components/ThisWeekTasks/WeekProgress'
+import WeekProgress from '@/Components/Tasks/WeekProgress'
 
 const ThisWeekTasksScreen = () => {
   const [getWeeksTasksTrigger, getWeeksTasksResult] =
@@ -24,11 +24,25 @@ const ThisWeekTasksScreen = () => {
 
       {getWeeksTasksResult.isSuccess &&
         !getWeeksTasksResult.isFetching &&
-        (getWeeksTasksResult.data.data.tasks.length ? (
+        (getWeeksTasksResult.data?.data?.tasks?.length ? (
           <View className={'flex-1 my-2'}>
+            <View className="flex-row">
+              <View style={{ flex: 1 }}></View>
+              <View style={{ flex: 3 }}>
+                <View className={'flex-row'}>
+                  {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day, index) => {
+                    return (
+                      <View className={'flex-1 items-center'} key={index}>
+                        <Text>{day}</Text>
+                      </View>
+                    )
+                  })}
+                </View>
+              </View>
+            </View>
             {getWeeksTasksResult.data.data.tasks.map((task, index) => {
               return (
-                <View className={'flex-row'}>
+                <View className={'flex-row'} key={task.id}>
                   <View className={'flex-1 justify-center '}>
                     <Text numberOfLines={2}>{task.title}</Text>
                   </View>

@@ -14,7 +14,7 @@ import { ScrollView } from 'react-native'
 import { Controller, useForm } from 'react-hook-form'
 import InputError from '@/Components/Errors/InputError'
 
-import { existsValidationRule, isValidForm } from '@/Util/FormUtil'
+import { isValidForm } from '@/Util/FormUtil'
 
 import FormSubmitError from '@/Components/Errors/FormSubmitError'
 import BaseLayout from '@/Components/Layout/BaseLayout/BaseLayout'
@@ -22,6 +22,7 @@ import BaseHeader from '@/Components/Layout/BaseLayout/BaseHeader'
 import { TextInput } from '@/Components/Base/Input/TextInput'
 import { LoggedInDrawerParamList } from '@/Router/LoggedInNavigator'
 import { useSx } from 'dripsy'
+import AwesomeDebouncePromise from 'awesome-debounce-promise'
 
 const CreateAcount = () => {
   const sx = useSx()
@@ -84,6 +85,11 @@ const CreateAcount = () => {
                     minLength: {
                       value: 3,
                       message: 'The name must be at least 3 characters long'
+                    },
+                    maxLength: {
+                      value: 50,
+                      message:
+                        'The name must be no longer than 50 characters long'
                     }
                   }}
                   render={({ field: { onChange, onBlur, value } }) => (
@@ -121,9 +127,16 @@ const CreateAcount = () => {
                       message: 'Invalid email address'
                     },
                     validate: {
-                      validateUser: existsValidationRule(
-                        emailAvailableTrigger,
-                        'Email not available'
+                      emailAvailable: AwesomeDebouncePromise(
+                        async (fieldValue: string) => {
+                          const res =
+                            await emailAvailableTrigger(fieldValue).unwrap()
+
+                          return res.data.available
+                            ? true
+                            : 'Email not available'
+                        },
+                        900
                       )
                     }
                   }}
@@ -156,18 +169,32 @@ const CreateAcount = () => {
                     control={control}
                     rules={{
                       minLength: {
-                        value: 8,
+                        value: 7,
                         message:
                           'The username must be at least 8 characters long'
+                      },
+                      maxLength: {
+                        value: 20,
+                        message:
+                          'The username must be no longer than 20 characters long'
                       },
                       required: {
                         value: true,
                         message: 'The username field is required'
                       },
                       validate: {
-                        validateUser: existsValidationRule(
-                          usernameAvailableTrigger,
-                          'Username not available'
+                        usernameAvailable: AwesomeDebouncePromise(
+                          async (fieldValue: string) => {
+                            const res =
+                              await usernameAvailableTrigger(
+                                fieldValue
+                              ).unwrap()
+
+                            return res.data.available
+                              ? true
+                              : 'Username not available'
+                          },
+                          900
                         )
                       }
                     }}
@@ -205,6 +232,11 @@ const CreateAcount = () => {
                         value: 7,
                         message:
                           'The password must be at least 7 characters long'
+                      },
+                      maxLength: {
+                        value: 20,
+                        message:
+                          'The password must be no longer than 20 characters long'
                       }
                     }}
                     render={({ field: { onChange, onBlur, value } }) => (
