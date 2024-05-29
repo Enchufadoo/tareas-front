@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React from 'react'
 import BaseLayout from '@/Components/Layout/BaseLayout/BaseLayout'
 import { SimpleLineIcons, Text, View } from '@/Components/Nativewind/React'
 import BaseHeader from '@/Components/Layout/BaseLayout/BaseHeader'
@@ -16,17 +16,12 @@ import { StackNavigationProp } from '@react-navigation/stack'
 import { NotLoggedInStackParamList } from '@/Router/NotLoggedInStackNavigator'
 import { TextInput } from '@/Components/Base/Input/TextInput'
 
-interface Props {}
-
-const PasswordResetScreen: React.FC<Props> = () => {
-  const [setPasswordReset, setPasswordResetResult] =
+const PasswordResetScreen = () => {
+  const [setPasswordResetTrigger, setPasswordResetResult] =
     useSetPasswordResetMutation()
   const navigation =
     useNavigation<StackNavigationProp<NotLoggedInStackParamList>>()
   const requiredFields = ['email']
-
-  const resetRef = useRef(setPasswordResetResult.reset)
-  resetRef.current = setPasswordResetResult.reset
 
   const {
     getValues,
@@ -98,18 +93,16 @@ const PasswordResetScreen: React.FC<Props> = () => {
               size={ButtonSize.medium}
               title={'Send Recovery Code'}
               disabled={!isDirty || !isValid}
-              outline={false}
               loading={
                 setPasswordResetResult.isLoading ||
                 setPasswordResetResult.isSuccess
               }
               onPress={async () => {
-                await setPasswordReset(getValues())
+                await setPasswordResetTrigger(getValues())
+
                 navigation.navigate('Reset Code Entry', {
                   email: getValues('email')
                 })
-
-                resetRef.current()
               }}
             />
           </View>

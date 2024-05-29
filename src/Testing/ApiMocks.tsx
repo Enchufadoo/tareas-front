@@ -8,6 +8,8 @@ import TaskWeek from '@/Testing/Responses/TaskWeek'
 import UserEmailAvailable from '@/Testing/Responses/UserEmailAvailable'
 import UserUsernameAvailable from '@/Testing/Responses/UserUsernameAvailable'
 import UserRegistrationEmail from '@/Testing/Responses/UserRegistrationEmail'
+import UserLoginEmail from '@/Testing/Responses/UserLoginEmail'
+import UserPasswordReset from '@/Testing/Responses/UserPasswordReset'
 
 const { setupServer } = require('msw/node')
 
@@ -18,7 +20,9 @@ export const createHandler = (url: string, code: string) => {
 
   return {
     handler: http[data.method](getUrl(url), () => {
-      return HttpResponse.json(data.response)
+      return HttpResponse.json(data.response, {
+        status: RESPONSES[url][code].status || 200
+      })
     }),
     response: data.response
   }
@@ -56,7 +60,8 @@ type Endpoints = {
   [key: string]: {
     [key: string]: {
       method: string
-      response: {}
+      response: any
+      status?: number
     }
   }
 }
@@ -66,6 +71,8 @@ const RESPONSES: Endpoints = {
   '/user/email/available': UserEmailAvailable,
   '/user/username/available': UserUsernameAvailable,
   '/user/registration/email': UserRegistrationEmail,
+  '/user/login/email': UserLoginEmail,
+  '/user/password/reset': UserPasswordReset,
   '/task': {
     '1_UNFINISHED': {
       method: REQUEST_METHODS.get,

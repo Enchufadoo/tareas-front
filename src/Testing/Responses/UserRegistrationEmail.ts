@@ -7,5 +7,21 @@ export default {
       },
       message: 'Login successful with EMAIL'
     }
+  },
+  RANDOM_ERROR: {
+    method: 'post',
+    status: 500,
+    response: {}
+  },
+  FAILED_VALIDATION: {
+    method: 'post',
+    status: 422,
+    response: {
+      message: 'The username has already been taken. (and 1 more error)',
+      errors: {
+        username: ['The username has already been taken.'],
+        email: ['The email has already been taken.']
+      }
+    }
   }
 }

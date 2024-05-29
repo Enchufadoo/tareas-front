@@ -45,14 +45,12 @@ describe('CreateAccountScreen', () => {
       'USERNAME_AVAILABLE'
     )
 
-    let { handler: registrationHandler } = createHandler(
-      '/user/registration/email',
-      'SUCCESSFUL_REGISTRATION'
-    )
+    let { handler: registrationHandler, response: registrationResponse } =
+      createHandler('/user/registration/email', 'SUCCESSFUL_REGISTRATION')
 
     server.use(...[emailHandler, usernameHandler, registrationHandler])
 
-    const { root } = renderCreateAccountScreen()
+    const { root, store } = renderCreateAccountScreen()
 
     await waitFor(async () => {
       const emailInput = root.findByProps({ placeholder: 'Email' })
@@ -71,6 +69,52 @@ describe('CreateAccountScreen', () => {
       await act(() => {
         expect(submitButton.props.disabled).toBe(false)
         fireEvent(submitButton, 'press')
+        expect(store.getState().application.token).toEqual(
+          registrationResponse.data.token
+        )
+      })
+    })
+  })
+
+  it('Should show a message if the request to create the account fails', async () => {
+    jest.useFakeTimers()
+
+    let { handler: emailHandler } = createHandler(
+      '/user/email/available',
+      'EMAIL_AVAILABLE'
+    )
+    let { handler: usernameHandler } = createHandler(
+      '/user/username/available',
+      'USERNAME_AVAILABLE'
+    )
+
+    let { handler: registrationHandler } = createHandler(
+      '/user/registration/email',
+      'RANDOM_ERROR'
+    )
+
+    server.use(...[emailHandler, usernameHandler, registrationHandler])
+
+    const { root, getByText } = renderCreateAccountScreen()
+
+    await waitFor(async () => {
+      const emailInput = root.findByProps({ placeholder: 'Email' })
+      const usernameInput = root.findByProps({ placeholder: 'Username' })
+      const nameInput = root.findByProps({ placeholder: 'Name' })
+      const passwordInput = root.findByProps({ placeholder: 'Password' })
+      const submitButton = root.findByProps({ title: 'Create Account' })
+      await act(() => {
+        fireEvent(nameInput, 'changeText', 'ArielL')
+        fireEvent(passwordInput, 'changeText', 'password12345')
+        fireEvent(emailInput, 'changeText', 'ariel@ariel.com')
+        fireEvent(usernameInput, 'changeText', 'ariel123456')
+        jest.runAllTimers()
+      })
+
+      await act(() => {
+        expect(submitButton.props.disabled).toBe(false)
+        fireEvent(submitButton, 'press')
+        getByText('Registration failed')
       })
     })
   })
