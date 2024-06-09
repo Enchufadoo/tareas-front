@@ -16,6 +16,8 @@ import { LoggedInDrawerParamList } from '@/Router/LoggedInNavigator'
 import { useSx } from 'dripsy'
 import Separator from '@/Components/Layout/BaseLayout/Separator'
 import SubmitButton from '@/Components/Base/Button/SubmitButton'
+import FormSubmitError from '@/Components/Errors/FormSubmitError'
+import { getErrorMessage } from '@/Util/ApiUtil'
 
 const ChangePasswordScreen = () => {
   const sx = useSx()
@@ -69,6 +71,11 @@ const ChangePasswordScreen = () => {
                 minLength: {
                   value: 7,
                   message: 'The password must be at least 7 characters long'
+                },
+                maxLength: {
+                  value: 20,
+                  message:
+                    'The password should not be longer than 20 characters long'
                 }
               }}
               render={({ field: { onChange, onBlur, value } }) => (
@@ -105,6 +112,11 @@ const ChangePasswordScreen = () => {
                 minLength: {
                   value: 7,
                   message: 'The password must be at least 7 characters long'
+                },
+                maxLength: {
+                  value: 20,
+                  message:
+                    'The password should not be longer than 20 characters long'
                 }
               }}
               render={({ field: { onChange, onBlur, value } }) => (
@@ -128,6 +140,17 @@ const ChangePasswordScreen = () => {
               name="password"
             />
             <InputError error={errors.password} />
+          </View>
+          <View className={'mt-3'}>
+            {setUpdatePasswordResult.isError && (
+              <FormSubmitError
+                header={'Error changing the password'}
+                subheader={getErrorMessage(
+                  setUpdatePasswordResult,
+                  'The was an error setting the password'
+                )}
+              />
+            )}
           </View>
         </View>
 

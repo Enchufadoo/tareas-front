@@ -5,7 +5,6 @@ import {
   TouchableOpacity
 } from 'react-native'
 
-import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React from 'react'
 import { DrawerActions, useNavigation } from '@react-navigation/native'
 import { useDispatch } from 'react-redux'
@@ -14,8 +13,6 @@ import { MaterialIcons, Text, View } from '@/Components/Nativewind/React'
 import { StackNavigationProp } from '@react-navigation/stack'
 import { SettingsStackParamList } from '@/Router/SettingsStackNavigator'
 import BaseLayout from '@/Components/Layout/BaseLayout/BaseLayout'
-
-type Props = NativeStackScreenProps<SettingsStackParamList, 'Settings Screen'>
 
 const styles = StyleSheet.create({
   container: {
@@ -33,7 +30,7 @@ const styles = StyleSheet.create({
   }
 })
 
-const Settings = (props: Props) => {
+const SettingsScreen = () => {
   const dispatch = useDispatch()
   const navigation =
     useNavigation<StackNavigationProp<SettingsStackParamList>>()
@@ -77,7 +74,7 @@ const Settings = (props: Props) => {
       title: 'Log Out',
       icon: <MaterialIcons sx={{ color: '$text' }} size={22} name={'logout'} />,
       onPress: () => {
-        props.navigation.dispatch(DrawerActions.closeDrawer())
+        navigation.dispatch(DrawerActions.closeDrawer())
         dispatch(logout())
       }
     }
@@ -133,4 +130,4 @@ const Item = ({ title, icon, description, onPress }) => (
   </TouchableOpacity>
 )
 
-export default Settings
+export default SettingsScreen

@@ -1,5 +1,5 @@
 import React from 'react'
-import { renderWithProviders } from '@/Testing/TestUtil'
+import { mockedNavigate, renderWithProviders } from '@/Testing/TestUtil'
 import { act, fireEvent, waitFor } from '@testing-library/react-native'
 import { NavigationContainer } from '@react-navigation/native'
 import '@testing-library/jest-native/extend-expect'
@@ -10,21 +10,7 @@ import { isInputInvalid, isInputValid } from '@/Testing/InputValidation'
 import { createHandler, server } from '@/Testing/ApiMocks'
 import { expect } from '@jest/globals'
 
-const mockedNavigate = jest.fn()
-
-jest.mock('@react-navigation/native', () => {
-  const actualNav = jest.requireActual('@react-navigation/native')
-  return {
-    ...actualNav,
-    useNavigation: () => {
-      return {
-        navigate: mockedNavigate
-      }
-    }
-  }
-})
-
-const renderLoginScreen = () => {
+const renderScreen = () => {
   return renderWithProviders(
     <NavigationContainer>
       <LoginScreen />
@@ -37,8 +23,8 @@ describe('LoginScreen', () => {
     jest.clearAllMocks()
   })
 
-  it('should render the login screen', async () => {
-    const { root, getByText } = renderLoginScreen()
+  it('should render the screen', async () => {
+    const { root, getByText } = renderScreen()
 
     await waitFor(() => {
       expect(getByText('Welcome Back')).toBeVisible()
@@ -49,15 +35,16 @@ describe('LoginScreen', () => {
   })
 
   it('should navigate to the forgot password screen', async () => {
-    const { getByText } = renderLoginScreen()
+    const { getByText } = renderScreen()
+
+    const forgotPassword = getByText('Forgot Password')
+    expect(forgotPassword).toBeVisible()
+
+    await act(async () => {
+      fireEvent(forgotPassword, 'press')
+    })
 
     await waitFor(async () => {
-      const forgotPassword = getByText('Forgot Password')
-      expect(forgotPassword).toBeVisible()
-
-      await act(() => {
-        fireEvent(forgotPassword, 'press')
-      })
       let navigate = expect(mockedNavigate)
 
       navigate.toHaveBeenCalledTimes(1)
@@ -66,17 +53,17 @@ describe('LoginScreen', () => {
   })
 
   it('should have password and email as required', async () => {
-    const { root } = renderLoginScreen()
+    const { root } = renderScreen()
+
+    const emailInput = root.findByProps({ placeholder: 'Email' })
+    const passwordInput = root.findByProps({ placeholder: 'Password' })
+
+    await act(async () => {
+      fireEvent(emailInput, 'changeText', '')
+      fireEvent(passwordInput, 'changeText', '')
+    })
 
     await waitFor(async () => {
-      const emailInput = root.findByProps({ placeholder: 'Email' })
-      const passwordInput = root.findByProps({ placeholder: 'Password' })
-
-      await act(() => {
-        fireEvent(emailInput, 'changeText', '')
-        fireEvent(passwordInput, 'changeText', '')
-      })
-
       isInputInvalid(emailInput)
       isInputInvalid(passwordInput)
     })
@@ -84,7 +71,7 @@ describe('LoginScreen', () => {
 
   it('should login with valid auth data', async () => {
     jest.useFakeTimers()
-    const { root, store } = renderLoginScreen()
+    const { root, store } = renderScreen()
 
     let { handler: loginHandler, response } = createHandler(
       '/user/login/email',
@@ -93,29 +80,33 @@ describe('LoginScreen', () => {
 
     server.use(loginHandler)
 
+    const emailInput = root.findByProps({ placeholder: 'Email' })
+    const passwordInput = root.findByProps({ placeholder: 'Password' })
+    const loginButton = root.findByProps({ title: 'Log in' })
+
+    await act(async () => {
+      fireEvent(emailInput, 'changeText', 'ariel2@ariel.com')
+      fireEvent(passwordInput, 'changeText', 'password12345')
+    })
+
     await waitFor(async () => {
-      const emailInput = root.findByProps({ placeholder: 'Email' })
-      const passwordInput = root.findByProps({ placeholder: 'Password' })
-      const loginButton = root.findByProps({ title: 'Log in' })
+      isInputValid(emailInput)
+      isInputValid(passwordInput)
+    })
 
-      await act(() => {
-        fireEvent(emailInput, 'changeText', 'ariel2@ariel.com')
-        fireEvent(passwordInput, 'changeText', 'password12345')
-        isInputValid(emailInput)
-        isInputValid(passwordInput)
-      })
+    await act(async () => {
+      fireEvent(loginButton, 'press')
+    })
 
-      await act(() => {
-        fireEvent(loginButton, 'press')
-        expect(store.getState().application.token).toEqual(response.data.token)
-      })
+    await waitFor(async () => {
+      expect(store.getState().application.token).toEqual(response.data.token)
     })
   })
 
   it('should display an error when login fails', async () => {
     jest.useFakeTimers()
 
-    const { root, getByText } = renderLoginScreen()
+    const { root, getByText } = renderScreen()
 
     let { handler: loginHandler } = createHandler(
       '/user/login/email',
@@ -124,22 +115,24 @@ describe('LoginScreen', () => {
 
     server.use(loginHandler)
 
+    const emailInput = root.findByProps({ placeholder: 'Email' })
+    const passwordInput = root.findByProps({ placeholder: 'Password' })
+    const loginButton = root.findByProps({ title: 'Log in' })
+
+    await act(async () => {
+      fireEvent(emailInput, 'changeText', 'ariel@ariel.com')
+      fireEvent(passwordInput, 'changeText', 'password12345')
+    })
+
+    isInputValid(emailInput)
+    isInputValid(passwordInput)
+
+    await act(async () => {
+      fireEvent(loginButton, 'press')
+    })
+
     await waitFor(async () => {
-      const emailInput = root.findByProps({ placeholder: 'Email' })
-      const passwordInput = root.findByProps({ placeholder: 'Password' })
-      const loginButton = root.findByProps({ title: 'Log in' })
-
-      await act(() => {
-        fireEvent(emailInput, 'changeText', 'ariel@ariel.com')
-        fireEvent(passwordInput, 'changeText', 'password12345')
-        isInputValid(emailInput)
-        isInputValid(passwordInput)
-      })
-
-      await act(() => {
-        fireEvent(loginButton, 'press')
-        getByText('Invalid email or password')
-      })
+      getByText('Invalid email or password')
     })
   })
 })

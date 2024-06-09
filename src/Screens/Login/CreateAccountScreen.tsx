@@ -3,7 +3,11 @@ import Button, {
   ButtonTheme
 } from '@/Components/Base/Button/Button'
 import { SimpleLineIcons, View } from '@/Components/Nativewind/React'
-import { userApi } from '@/Services/User'
+import {
+  useLazyIsEmailAvailableQuery,
+  useLazyIsUsernameAvailableQuery,
+  useSetRegistrationEmailMutation
+} from '@/Services/Guest'
 import { setTokenFromLogin } from '@/Store/Features/ApplicationSlice'
 import React, { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
@@ -31,13 +35,13 @@ const CreateAcount = () => {
     useNavigation<StackNavigationProp<LoggedInDrawerParamList>>()
 
   const [usernameAvailableTrigger, usernameAvailableResult] =
-    userApi.endpoints.isUsernameAvailable.useLazyQuery()
+    useLazyIsUsernameAvailableQuery()
 
   const [emailAvailableTrigger, emailAvailableResult] =
-    userApi.endpoints.isEmailAvailable.useLazyQuery()
+    useLazyIsEmailAvailableQuery()
 
   const [setRegistrationEmail, setRegistrationEmailResult] =
-    userApi.useSetRegistrationEmailMutation()
+    useSetRegistrationEmailMutation()
 
   useEffect(() => {
     if (setRegistrationEmailResult.isSuccess) {

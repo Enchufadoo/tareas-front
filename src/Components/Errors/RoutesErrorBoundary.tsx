@@ -30,7 +30,7 @@ const RoutesErrorBoundary = (props: React.ComponentProps<typeof View>) => {
 export const withErrorBoundary = <T extends React.PropsWithChildren>(
   WrappedComponent: React.ComponentType<any>
 ) => {
-  const ComponentWithErrorBoundary = (props: Omit<T, keyof T>) => {
+  const ComponentWithErrorBoundary = (props: T) => {
     return <WrappedComponent {...(props as T)} />
   }
 

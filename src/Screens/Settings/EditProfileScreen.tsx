@@ -1,6 +1,9 @@
 import { ButtonSize, ButtonTheme } from '@/Components/Base/Button/Button'
 import { SimpleLineIcons, Text, View } from '@/Components/Nativewind/React'
-import { userApi, useSetUpdateProfileMutation } from '@/Services/User'
+import {
+  useLazyIsUsernameAvailableQuery,
+  useSetUpdateProfileMutation
+} from '@/Services/User'
 import { selectUserData } from '@/Store/Features/ApplicationSlice'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -28,7 +31,7 @@ const EditProfileScreen = () => {
     useNavigation<StackNavigationProp<LoggedInDrawerParamList>>()
 
   const [usernameAvailableTrigger, usernameAvailableResult] =
-    userApi.endpoints.isUsernameAvailable.useLazyQuery()
+    useLazyIsUsernameAvailableQuery()
 
   const [setUpdateProfile, setUpdateProfileResult] =
     useSetUpdateProfileMutation()
@@ -71,6 +74,11 @@ const EditProfileScreen = () => {
                 minLength: {
                   value: 8,
                   message: 'The username must be at least 8 characters long'
+                },
+                maxLength: {
+                  value: 20,
+                  message:
+                    "The username shouldn't be longer than 20 characters long"
                 },
                 required: {
                   value: true,
@@ -123,6 +131,11 @@ const EditProfileScreen = () => {
                 minLength: {
                   value: 3,
                   message: 'The name must be at least 3 characters long'
+                },
+                maxLength: {
+                  value: 50,
+                  message:
+                    'The name should not be longer than 50 characters long'
                 }
               }}
               render={({ field: { onChange, onBlur, value } }) => (
@@ -159,12 +172,14 @@ const EditProfileScreen = () => {
             disabled={!isValid}
             trigger={trigger}
             onPress={async () => {
-              await setUpdateProfile(getValues())
-              ToastAndroid.show(
-                'Profile information successfully updated',
-                ToastAndroid.LONG
-              )
-              navigation.goBack()
+              let res = await setUpdateProfile(getValues())
+              if (!('error' in res)) {
+                ToastAndroid.show(
+                  'Profile information successfully updated',
+                  ToastAndroid.LONG
+                )
+                navigation.goBack()
+              }
             }}
           />
         </View>

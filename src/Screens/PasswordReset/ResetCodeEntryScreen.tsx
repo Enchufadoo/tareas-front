@@ -16,6 +16,7 @@ import FormSubmitError from '@/Components/Errors/FormSubmitError'
 import { useNavigation } from '@react-navigation/native'
 import { StackNavigationProp } from '@react-navigation/stack'
 import { useSx } from 'dripsy'
+import { getErrorMessage } from '@/Util/ApiUtil'
 
 type Props = NativeStackScreenProps<
   NotLoggedInStackParamList,
@@ -67,10 +68,10 @@ const ResetCodeEntryScreen = (props: Props) => {
                 <View className={'mt-10'}>
                   <FormSubmitError
                     header={'Password Reset Failed'}
-                    subheader={
-                      setPasswordEnterResetCodeResult.error?.data?.message ||
+                    subheader={getErrorMessage(
+                      setPasswordEnterResetCodeResult,
                       "We're sorry, but an unexpected error has occurred. "
-                    }
+                    )}
                   />
                 </View>
               )}

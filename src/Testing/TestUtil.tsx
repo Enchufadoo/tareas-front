@@ -47,7 +47,7 @@ export function renderWithProviders(
   return { store, ...render(ui, { wrapper: Wrapper, ...renderOptions }) }
 }
 
-const NavigationCTC = ({ children }: React.PropsWithChildren) => {
+export const NavigationCTC = ({ children }: React.PropsWithChildren) => {
   return (
     <NavigationContainer>
       <StoreProvider>
@@ -57,4 +57,23 @@ const NavigationCTC = ({ children }: React.PropsWithChildren) => {
   )
 }
 
-export { NavigationCTC }
+export const mockedNavigate = jest.fn()
+export const mockedGoBack = jest.fn()
+export const mockedDispatch = jest.fn()
+
+export const mockNavigation = (mockedNavigate: jest.Mock<any, any, any>) => {
+  return () => {
+    const actualNav = jest.requireActual('@react-navigation/native')
+    return {
+      ...actualNav,
+      setOptions: jest.fn(),
+      useNavigation: () => {
+        return {
+          navigate: mockedNavigate,
+          goBack: mockedGoBack,
+          dispatch: mockedDispatch
+        }
+      }
+    }
+  }
+}

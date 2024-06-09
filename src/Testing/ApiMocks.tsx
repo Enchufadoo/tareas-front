@@ -5,11 +5,22 @@
 
 import { http, HttpResponse } from 'msw'
 import TaskWeek from '@/Testing/Responses/TaskWeek'
-import UserEmailAvailable from '@/Testing/Responses/UserEmailAvailable'
-import UserUsernameAvailable from '@/Testing/Responses/UserUsernameAvailable'
-import UserRegistrationEmail from '@/Testing/Responses/UserRegistrationEmail'
+import GuestEmailAvailable from '@/Testing/Responses/GuestEmailAvailable'
+import GuestUsernameAvailable from '@/Testing/Responses/GuestUsernameAvailable'
+import GuestRegistrationEmail from '@/Testing/Responses/GuestRegistrationEmail'
 import UserLoginEmail from '@/Testing/Responses/UserLoginEmail'
 import UserPasswordReset from '@/Testing/Responses/UserPasswordReset'
+import UserPasswordCode from '@/Testing/Responses/UserPasswordCode'
+import UserPassword from '@/Testing/Responses/UserPassword'
+import UserPasswordResetUpdate from '@/Testing/Responses/UserPasswordResetUpdate'
+import Task from '@/Testing/Responses/Task'
+import UserUsernameAvailable from '@/Testing/Responses/UserUsernameAvailable'
+import User from '@/Testing/Responses/User'
+import Setting from '@/Testing/Responses/Setting'
+import SettingId from '@/Testing/Responses/SettingId'
+import TaskStoreData from '@/Testing/Responses/TaskStoreData'
+import TaskId from '@/Testing/Responses/TaskId'
+import taskProgressId from '@/Testing/Responses/TaskProgressId'
 
 const { setupServer } = require('msw/node')
 
@@ -19,7 +30,7 @@ export const createHandler = (url: string, code: string) => {
   const data = RESPONSES[url][code]
 
   return {
-    handler: http[data.method](getUrl(url), () => {
+    handler: http[data.method](getUrl(url), ({ params }) => {
       return HttpResponse.json(data.response, {
         status: RESPONSES[url][code].status || 200
       })
@@ -30,11 +41,6 @@ export const createHandler = (url: string, code: string) => {
 
 export const getResponseData = (url: string, code: string) => {
   return RESPONSES[url][code].response
-}
-
-export const createHandlerResponse = (server, url: string, code: string) => {
-  server.use(createHandler(url, code))
-  return getResponseData(url, code)
 }
 
 export const initMSW = () => {
@@ -68,104 +74,22 @@ type Endpoints = {
 
 const RESPONSES: Endpoints = {
   '/task/week': TaskWeek,
-  '/user/email/available': UserEmailAvailable,
-  '/user/username/available': UserUsernameAvailable,
-  '/user/registration/email': UserRegistrationEmail,
+  '/guest/email/available': GuestEmailAvailable,
+  '/guest/username/available': GuestUsernameAvailable,
+  '/guest/registration/email': GuestRegistrationEmail,
   '/user/login/email': UserLoginEmail,
   '/user/password/reset': UserPasswordReset,
-  '/task': {
-    '1_UNFINISHED': {
-      method: REQUEST_METHODS.get,
-      response: {
-        data: {
-          task_count: {
-            finished: 0,
-            unfinished: 1
-          },
-          tasks: [
-            {
-              id: 1,
-              title: 'Test',
-              description: 'Testttsltksskl',
-              user_id: 2,
-              finished: 0,
-              end_date: null,
-              created_at: '2024-03-06T22:59:48.000000Z',
-              updated_at: '2024-03-06T22:59:48.000000Z',
-              deleted_at: null,
-              hours_since_progress: 722,
-              last_progress: {
-                id: 1,
-                task_id: 1,
-                user_id: 2,
-                created_at: '2024-03-06T23:00:44.000000Z',
-                updated_at: '2024-03-06T23:00:44.000000Z'
-              },
-              progress_today: false,
-              user: {
-                username: 'ariel123',
-                email: 'ariel@mooo.com',
-                avatar: null
-              }
-            }
-          ]
-        },
-        message: 'List of tasks'
-      }
-    },
-    '0_TASKS': {
-      method: REQUEST_METHODS.get,
-      response: {
-        data: {
-          task_count: {
-            finished: 0,
-            unfinished: 0
-          },
-          tasks: []
-        },
-        message: 'List of tasks'
-      }
-    },
-    '1_FINISHED': {
-      method: REQUEST_METHODS.get,
-      response: {
-        data: {
-          task_count: {
-            finished: 1,
-            unfinished: 0
-          },
-          tasks: [
-            {
-              id: 1,
-              title: 'Test',
-              description: 'finished task 99',
-              user_id: 2,
-              finished: 1,
-              end_date: null,
-              created_at: '2024-03-06T22:59:48.000000Z',
-              updated_at: '2024-03-06T22:59:48.000000Z',
-              deleted_at: null,
-              hours_since_progress: 722,
-              last_progress: {
-                id: 1,
-                task_id: 1,
-                user_id: 2,
-                created_at: '2024-03-06T23:00:44.000000Z',
-                updated_at: '2024-03-06T23:00:44.000000Z'
-              },
-              progress_today: false,
-              user: {
-                username: 'ariel123',
-                email: 'ari@ari.com',
-                avatar: null
-              }
-            }
-          ]
-        },
-        message: 'List of tasks'
-      }
-    }
-  }
+  '/user/password/code': UserPasswordCode,
+  '/user/password': UserPassword,
+  '/user/password/reset/update': UserPasswordResetUpdate,
+  '/user/username/available': UserUsernameAvailable,
+  '/task': Task,
+  '/task/:id': TaskId,
+  '/user': User,
+  '/setting': Setting,
+  '/setting/:id': SettingId,
+  '/task/store/data': TaskStoreData,
+  '/task/progress/:id': taskProgressId
 }
 
 export const server = initMSW()

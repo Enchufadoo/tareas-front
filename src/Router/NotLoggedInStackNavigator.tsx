@@ -41,10 +41,14 @@ const NotLoggedInStackNavigator: React.FC<{}> = (props: Props) => {
     <StackNavigator.Navigator
       initialRouteName="Login Screen"
       screenOptions={{
-        title: '',
-        headerTransparent: true,
+        headerTransparent: false,
         headerShadowVisible: false,
-        headerTintColor: sx({ color: '$headerTint' })['color']
+        headerTintColor: sx({ color: '$headerTint' })['color'],
+        headerShown: true,
+        headerTitle: '',
+        headerTitleStyle: {
+          color: sx({ color: '$text' })['color']
+        }
       }}
     >
       <StackNavigator.Screen name="Login Screen" component={LoginScreen} />
@@ -60,7 +64,6 @@ const NotLoggedInStackNavigator: React.FC<{}> = (props: Props) => {
       <StackNavigator.Screen
         name="Reset Code Entry"
         component={ResetCodeEntryScreen}
-        options={{}}
       />
 
       <StackNavigator.Screen

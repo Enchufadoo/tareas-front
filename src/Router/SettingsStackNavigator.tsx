@@ -3,7 +3,7 @@ import { Text } from 'react-native'
 import { createStackNavigator } from '@react-navigation/stack'
 
 import { LinkingOptions, Theme } from '@react-navigation/native'
-import SettingsScreen from '@/Screens/Settings/Settings'
+import SettingsScreen from '@/Screens/Settings/SettingsScreen'
 import ThemesScreen from '@/Screens/Settings/ThemesScreen'
 import { useSx } from 'dripsy'
 import EditProfileScreen from '@/Screens/Settings/EditProfileScreen'

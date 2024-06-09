@@ -14,8 +14,9 @@ import {
 import { useSetSettingMutation } from '@/Services/Settings'
 import { Themes } from '@/Themes/ThemeCollection'
 import Separator from '@/Components/Layout/BaseLayout/Separator'
+import FormSubmitError from '@/Components/Errors/FormSubmitError'
 
-let debounced: number = 0
+let debounced: NodeJS.Timeout | null = null
 
 function ThemesScreen() {
   const radioContext = React.createContext(null)
@@ -72,6 +73,14 @@ function ThemesScreen() {
             context={radioContext}
           />
         </RadioButtonGroup>
+        {setSettingResult.isError && (
+          <View>
+            <FormSubmitError
+              header={'Failed to save the setting'}
+              subheader={'An unknown error occurred.'}
+            />
+          </View>
+        )}
       </View>
     </BaseLayout>
   )

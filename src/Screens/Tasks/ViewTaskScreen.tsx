@@ -13,7 +13,6 @@ import Button, {
   ButtonTheme
 } from '@/Components/Base/Button/Button'
 import BaseLayout from '@/Components/Layout/BaseLayout/BaseLayout'
-import { withErrorBoundary } from '@/Components/Errors/RoutesErrorBoundary'
 import { LoggedInStackParamList } from '@/Router/LoggedInStackNavigator'
 import { useLoadingData } from '@/Lib/UseLoadingData'
 import { useSx } from 'dripsy'
@@ -88,12 +87,9 @@ const ViewTaskScreen = (props: Props) => {
         textStyle: sx({ color: '$text' }),
         destructiveColor: sx({ color: '$text' })['color']
       },
-      (selectedIndex: number) => {
+      async (selectedIndex: number) => {
         switch (selectedIndex) {
           case destructiveButtonIndex:
-            setDeleteTaskMutation(task.id)
-            props.navigation.navigate('Home Screen')
-
             setDeleteDialogVisible(true)
             break
           case finishTaskIndex:
@@ -201,4 +197,4 @@ const ViewTaskScreen = (props: Props) => {
   )
 }
 
-export default withErrorBoundary(ViewTaskScreen)
+export default ViewTaskScreen

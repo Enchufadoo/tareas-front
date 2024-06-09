@@ -17,14 +17,6 @@ type SetLoginEmailParams = {
   password: string
 }
 
-type SetRegistrationEmailResponse = { data: { token: string } }
-type SetRegistrationEmailParams = {
-  name: string
-  email: string
-  password: string
-  username: string
-}
-
 export const userApi = api.injectEndpoints({
   overrideExisting: true,
 
@@ -63,19 +55,7 @@ export const userApi = api.injectEndpoints({
       },
       invalidatesTags: []
     }),
-    setRegistrationEmail: build.mutation<
-      SetRegistrationEmailResponse,
-      SetRegistrationEmailParams
-    >({
-      query: (params) => {
-        return {
-          url: `/user/registration/email`,
-          method: 'POST',
-          data: params
-        }
-      },
-      invalidatesTags: []
-    }),
+
     setLoginEmail: build.mutation<SetLoginEmailResponse, SetLoginEmailParams>({
       query: (loginParams) => {
         return {
@@ -86,30 +66,7 @@ export const userApi = api.injectEndpoints({
       },
       invalidatesTags: []
     }),
-    isUsernameAvailable: build.query<{ data: { available: boolean } }, string>({
-      query: (username) => {
-        return {
-          url: `/user/username/available`,
-          method: 'GET',
-          params: {
-            username
-          }
-        }
-      },
-      providesTags: []
-    }),
-    isEmailAvailable: build.query<{ data: { available: boolean } }, string>({
-      query: (email) => {
-        return {
-          url: `/user/email/available`,
-          method: 'GET',
-          params: {
-            email
-          }
-        }
-      },
-      providesTags: []
-    }),
+
     setPasswordReset: build.mutation<{}, { email: string }>({
       query: (params) => {
         return {
@@ -121,7 +78,7 @@ export const userApi = api.injectEndpoints({
       invalidatesTags: []
     }),
     setPasswordEnterResetCode: build.mutation<
-      { data: { renewal_token: string } },
+      { data: { renewal_token: string }; message: string },
       { email: string; code: string }
     >({
       query: (params) => {
@@ -167,6 +124,30 @@ export const userApi = api.injectEndpoints({
           params: params
         }
       }
+    }),
+    isUsernameAvailable: build.query<{ data: { available: boolean } }, string>({
+      query: (username) => {
+        return {
+          url: `/user/username/available`,
+          method: 'GET',
+          params: {
+            username
+          }
+        }
+      },
+      providesTags: []
+    }),
+    isEmailAvailable: build.query<{ data: { available: boolean } }, string>({
+      query: (email) => {
+        return {
+          url: `/user/email/available`,
+          method: 'GET',
+          params: {
+            email
+          }
+        }
+      },
+      providesTags: []
     })
   })
 })
@@ -175,13 +156,11 @@ export const {
   useSetPasswordEnterResetCodeMutation,
   useSetPasswordResetMutation,
   useSetUsernameMutation,
-  useGetUserQuery,
   useLazyGetUserQuery,
-  useIsUsernameAvailableQuery,
-  useIsEmailAvailableQuery,
   useSetLoginMutation,
-  useSetLoginEmailMutation,
   useSetUpdateProfileMutation,
   useSetNewPasswordForResetMutation,
-  useSetUpdatePasswordMutation
+  useSetUpdatePasswordMutation,
+  useLazyIsUsernameAvailableQuery,
+  useLazyIsEmailAvailableQuery
 } = userApi

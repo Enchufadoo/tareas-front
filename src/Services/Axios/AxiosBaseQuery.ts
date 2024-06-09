@@ -35,11 +35,24 @@ const axiosBaseQuery =
       return { data: result.data }
     } catch (axiosError) {
       let err = axiosError as AxiosError
+      let data = err.response.data
+
+      let message = null
+
+      if (
+        typeof data === 'object' &&
+        data != null &&
+        'message' in data &&
+        typeof (data as any).message === 'string'
+      ) {
+        message = data.message
+      }
 
       return {
         error: {
           status: err.response?.status,
-          data: err.response?.data || err.message
+          data: err.response?.data || err.message,
+          message: message
         }
       }
     }
