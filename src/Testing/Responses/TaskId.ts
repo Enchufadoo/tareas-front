@@ -49,7 +49,7 @@ export default {
       message: 'Task data'
     }
   },
-  DELETE_SUCCESSFUL: {
+  DELETE_SUCCESS: {
     method: 'delete',
     response: {
       data: [],

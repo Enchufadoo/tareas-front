@@ -26,7 +26,6 @@ const LoggedInNavigator: React.FC<{}> = () => {
       screenOptions={{
         headerShown: true,
         headerTitle: '',
-
         headerStyle: sx({ backgroundColor: '$drawerBackground' }),
         headerShadowVisible: false,
         drawerActiveTintColor: sx({ color: '$primary' })['color'],

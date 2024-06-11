@@ -1,9 +1,11 @@
 import React, { useState } from 'react'
 import { ActivityIndicator, Animated, Platform, StyleSheet } from 'react-native'
 import {
+  Octicons,
   SimpleLineIcons,
   Text,
   TextInput as ElementInput,
+  TouchableOpacity,
   View
 } from '@/Components/Nativewind/React'
 import { NativeSyntheticEvent } from 'react-native/Libraries/Types/CoreEventTypes'
@@ -32,6 +34,7 @@ export type TextInputProps = React.ComponentPropsWithoutRef<
 
 export function TextInput(props: TextInputProps) {
   const [borderColor] = useState(new Animated.Value(0))
+  const [secureTextEntry, setSecureTextEntry] = useState(props.secureTextEntry)
   const sx = useSx()
   const { testID, ...otherProps } = props
 
@@ -157,16 +160,33 @@ export function TextInput(props: TextInputProps) {
             selectionColor={sx({ color: '$primary' })['color']}
             style={styles.textInput}
             {...otherProps}
+            secureTextEntry={secureTextEntry}
           />
-          {rightIcon && (
-            <View
-              testID={'ProgressIndicator'}
-              className={' justify-center pr-2 pl-1'}
-              style={props.rightIconContainerStyle}
-            >
-              {rightIcon}
-            </View>
-          )}
+          <View className={'justify-center flex-row items-center pr-1'}>
+            {props.secureTextEntry && (
+              <TouchableOpacity
+                className={'mr-2 ml-1'}
+                onPress={() => {
+                  setSecureTextEntry(!secureTextEntry)
+                }}
+              >
+                <Octicons
+                  name={secureTextEntry ? 'eye' : 'eye-closed'}
+                  size={16}
+                  sx={{ color: '$text' }}
+                />
+              </TouchableOpacity>
+            )}
+            {rightIcon && (
+              <View
+                testID={'ProgressIndicator'}
+                className={'mr-1 ml-1'}
+                style={props.rightIconContainerStyle}
+              >
+                {rightIcon}
+              </View>
+            )}
+          </View>
         </View>
       </Animated.View>
     </View>

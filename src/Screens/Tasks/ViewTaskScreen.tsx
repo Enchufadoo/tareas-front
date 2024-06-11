@@ -130,8 +130,13 @@ const ViewTaskScreen = (props: Props) => {
             </View>
             <DeleteConfirmation
               deleteAction={async () => {
-                await setDeleteTaskMutation(task.id)
-                props.navigation.navigate('Home Screen')
+                try {
+                  await setDeleteTaskMutation(task.id).unwrap()
+                  setDeleteDialogVisible(!deleteDialogVisible)
+                  props.navigation.navigate('Home Screen')
+                } catch (e) {
+                  console.log(e, 'error')
+                }
               }}
               visible={deleteDialogVisible}
               toggleVisible={() => {

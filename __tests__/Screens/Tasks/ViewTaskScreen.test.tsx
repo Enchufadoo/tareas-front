@@ -1,10 +1,6 @@
 import React from 'react'
 
-import {
-  mockedNavigate,
-  mockNavigation,
-  renderWithProviders
-} from '@/Testing/TestUtil'
+import { renderWithProviders } from '@/Testing/TestUtil'
 import '@testing-library/jest-native/extend-expect'
 import { act, fireEvent, waitFor } from '@testing-library/react-native'
 import ViewTaskScreen from '@/Screens/Tasks/ViewTaskScreen'
@@ -12,8 +8,6 @@ import { createHandler, server } from '@/Testing/ApiMocks'
 import { capitalize } from '@/Util/StringUtil'
 import { ReactTestInstance } from 'react-test-renderer'
 import MockedNavigator from '@/Testing/MockedNavigator'
-
-let navigation = mockNavigation(mockedNavigate)
 
 jest.mock('@expo/react-native-action-sheet', () => ({
   ...jest.requireActual('@expo/react-native-action-sheet')
@@ -153,7 +147,7 @@ describe('ViewTaskScreen', () => {
     expect(showActionSheetWithOptions).toBeCalledTimes(1)
   })
 
-  it('should navigate to the homescreen after deleting', async () => {
+  it('should display a delete confirmation dialog when clicking delete', async () => {
     const showActionSheetWithOptions = jest.fn()
     jest.spyOn(ExpoActionSheet, 'useActionSheet').mockReturnValue({
       showActionSheetWithOptions
@@ -191,10 +185,68 @@ describe('ViewTaskScreen', () => {
       actionSheetCallback(0)
     })
 
-    getByText('')
+    await waitFor(() => {
+      getByText('Are you sure you want to delete this task')
+    })
   })
 
-  it('should stay on the screen when deleting fails', async () => {
+  it('should delete the task when clicking on the confirmation dialog delete button', async () => {
+    const showActionSheetWithOptions = jest.fn()
+    jest.spyOn(ExpoActionSheet, 'useActionSheet').mockReturnValue({
+      showActionSheetWithOptions
+    })
+
+    const { handler: getTaskHandler } = createHandler(
+      '/task/:id',
+      'GET_TASK_SUCCESSFULLY'
+    )
+
+    const { handler: deleteTaskHandler } = createHandler(
+      '/task/:id',
+      'DELETE_SUCCESS'
+    )
+
+    server.use(getTaskHandler, deleteTaskHandler)
+
+    const { root, queryByText } = renderScreen()
+
+    let optionsDialog: ReactTestInstance
+
+    await waitFor(() => {
+      optionsDialog = root.findByProps({ name: 'dots-three-horizontal' })
+    })
+
+    await act(async () => {
+      fireEvent(optionsDialog, 'press')
+    })
+
+    const actionSheetCallback = showActionSheetWithOptions.mock.calls[0][1]
+    const navigateMock = jest
+      .spyOn(
+        root.findByType(ViewTaskScreen).props.navigation as any,
+        'navigate'
+      )
+      .mockImplementation()
+
+    await act(async () => {
+      actionSheetCallback(0)
+    })
+
+    let deleteButton = root.findByProps({ title: 'Delete' })
+
+    await act(async () => {
+      fireEvent.press(deleteButton)
+      jest.runAllTimers()
+    })
+
+    expect(navigateMock).toHaveBeenCalledTimes(1)
+    expect(navigateMock).toHaveBeenCalledWith('Home Screen')
+    expect(
+      queryByText('Are you sure you want to delete this task')
+    ).not.toBeOnTheScreen()
+  })
+
+  it('should stay with the modal open in case the delete fails', async () => {
     const showActionSheetWithOptions = jest.fn()
     jest.spyOn(ExpoActionSheet, 'useActionSheet').mockReturnValue({
       showActionSheetWithOptions
@@ -212,7 +264,7 @@ describe('ViewTaskScreen', () => {
 
     server.use(getTaskHandler, deleteTaskHandler)
 
-    const { root, getByText } = renderScreen()
+    const { root, queryByText } = renderScreen()
 
     let optionsDialog: ReactTestInstance
 
@@ -222,7 +274,6 @@ describe('ViewTaskScreen', () => {
 
     await act(async () => {
       fireEvent(optionsDialog, 'press')
-      jest.runAllTimers()
     })
 
     const actionSheetCallback = showActionSheetWithOptions.mock.calls[0][1]
@@ -237,6 +288,17 @@ describe('ViewTaskScreen', () => {
       actionSheetCallback(0)
     })
 
+    let deleteButton = root.findByProps({ title: 'Delete' })
+
+    await act(async () => {
+      fireEvent.press(deleteButton)
+      jest.runAllTimers()
+    })
+
     expect(navigateMock).toHaveBeenCalledTimes(0)
+
+    expect(
+      queryByText('Are you sure you want to delete this task')
+    ).toBeOnTheScreen()
   })
 })

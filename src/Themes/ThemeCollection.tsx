@@ -28,7 +28,7 @@ export const LightTheme = makeTheme({
     $success: '#0f0',
     $drawerBackground: '#b336be',
     $statusBarColor: '#b336be',
-    $headerTint: '#000',
+    $headerTint: '#fff',
     $linkColor: '#00f'
   },
 

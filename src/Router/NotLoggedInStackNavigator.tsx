@@ -44,14 +44,21 @@ const NotLoggedInStackNavigator: React.FC<{}> = (props: Props) => {
         headerTransparent: false,
         headerShadowVisible: false,
         headerTintColor: sx({ color: '$headerTint' })['color'],
+        headerStyle: sx({ backgroundColor: '$drawerBackground' }),
         headerShown: true,
-        headerTitle: '',
         headerTitleStyle: {
-          color: sx({ color: '$text' })['color']
+          color: sx({ color: '$headerTint' })['color']
         }
       }}
     >
-      <StackNavigator.Screen name="Login Screen" component={LoginScreen} />
+      <StackNavigator.Screen
+        name="Login Screen"
+        component={LoginScreen}
+        options={{
+          headerTitle: '',
+          headerStyle: sx({ backgroundColor: 'transparent' })
+        }}
+      />
 
       <StackNavigator.Screen
         name="Create Account Screen"
@@ -59,18 +66,22 @@ const NotLoggedInStackNavigator: React.FC<{}> = (props: Props) => {
       />
       <StackNavigator.Screen
         name="Reset Password"
+        options={{ headerTitle: 'Password Reset' }}
         component={PasswordResetScreen}
       />
       <StackNavigator.Screen
         name="Reset Code Entry"
+        options={{ headerTitle: 'Reset Code Entry' }}
         component={ResetCodeEntryScreen}
       />
 
       <StackNavigator.Screen
+        options={{ headerTitle: 'Set Your New Password' }}
         name="Set New Password From Reset"
         component={SetNewPasswordFromResetScreen}
       />
       <StackNavigator.Screen
+        options={{ headerTitle: 'Password Reset Success' }}
         name="Password Reset Success"
         component={PasswordResetSuccessScreen}
       />
